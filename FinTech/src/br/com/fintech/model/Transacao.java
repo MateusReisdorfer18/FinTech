@@ -1,14 +1,19 @@
 package br.com.fintech.model;
 
-import br.com.fintech.model.contas.IConta;
+import br.com.fintech.model.contas.Conta;
 
 public class Transacao {
     private Integer tipo;
-    private IConta contaDe;
-    private IConta contaPara;
+    private Conta contaDe;
+    private Conta contaPara;
     private Double valor;
 
-    public Transacao() {}
+    public Transacao(Integer tipo, Conta contaDe, Conta contaPara, Double valor) {
+        this.tipo = tipo;
+        this.contaDe = contaDe;
+        this.contaPara = contaPara;
+        this.valor = valor;
+    }
 
     public Integer getTipo() {
         return this.tipo;
@@ -18,19 +23,19 @@ public class Transacao {
         this.tipo = tipo;
     }
 
-    public IConta getContaDe() {
+    public Conta getContaDe() {
         return this.contaDe;
     }
 
-    public void setContaDe(IConta contaDe) {
+    public void setContaDe(Conta contaDe) {
         this.contaDe = contaDe;
     }
 
-    public IConta getContaPara() {
+    public Conta getContaPara() {
         return this.contaPara;
     }
 
-    public void setContaPara(IConta contaPara) {
+    public void setContaPara(Conta contaPara) {
         this.contaPara = contaPara;
     }
 
@@ -43,6 +48,12 @@ public class Transacao {
     }
 
     public boolean efetuarTransacao() {
+        if(this.contaDe.getSaldo() >= this.valor) {
+            this.contaPara.setSaldo(this.valor);
+            this.contaDe.setSaldo(this.contaDe.getSaldo() - this.valor);
+            return true;
+        }
+
         return false;
     }
 }
