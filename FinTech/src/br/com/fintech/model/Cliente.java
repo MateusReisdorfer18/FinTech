@@ -18,6 +18,16 @@ public class Cliente {
         this.contas = new ArrayList<>();
     }
 
+    public Conta getContaByNum(int numConta) {
+        for(Conta conta: this.contas) {
+            if(conta.getNumero() == numConta) {
+                return conta;
+            }
+        }
+
+        return null;
+    }
+
     public String getNome() {
         return this.nome;
     }
@@ -48,7 +58,7 @@ public class Cliente {
         this.email = email;
     }
 
-    public void criarConta(int tipoConta) {
+    public void criarConta(int tipoConta, int numConta) {
         boolean contaValida = this.verificarTipoDaConta(tipoConta);
 
         if(!contaValida) {
@@ -58,16 +68,16 @@ public class Cliente {
 
         switch (tipoConta) {
             case 1:
-                Conta contaCorrente = new Conta(new ContaCorrente());
+                ContaCorrente contaCorrente = new ContaCorrente(this.nome, numConta);
                 this.contas.add(contaCorrente);
                 break;
             case 2:
-                Conta contaPoupanca = new Conta(new ContaPoupanca());
+                ContaPoupanca contaPoupanca = new ContaPoupanca(this.nome, numConta);
                 this.contas.add(contaPoupanca);
                 break;
             case 3:
-                Conta contaInvestimento = new Conta(new ContaInvestimento());
-                this.contas.add((contaInvestimento));
+                ContaInvestimento contaInvestimento = new ContaInvestimento(this.nome, numConta);
+                this.contas.add(contaInvestimento);
                 break;
             default:
                 System.out.println("Opção inválida, digite novamente");
@@ -87,8 +97,8 @@ public class Cliente {
     }
 
     public void encerrarConta(int tipoConta) {
-        if(findConta(tipoConta) != null) {
-            this.contas.remove(findConta(tipoConta));
+        if(this.findConta(tipoConta) != null) {
+            this.contas.remove(this.findConta(tipoConta));
             return;
         }
 

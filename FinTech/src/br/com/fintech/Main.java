@@ -1,6 +1,7 @@
 package br.com.fintech;
 
 import br.com.fintech.model.Cliente;
+import br.com.fintech.model.Transacao;
 import br.com.fintech.model.contas.Conta;
 
 import java.util.Scanner;
@@ -9,6 +10,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         boolean continuar = true;
+        int cont = 0;
 
         Cliente cliente = new Cliente("Mateus", "mateus@email.com", "06765324976");
 
@@ -36,7 +38,9 @@ public class Main {
                         break;
                     }
 
-                    cliente.criarConta(opcao);
+                    cont++;
+
+                    cliente.criarConta(opcaoCriar, cont);
 
                     for(Conta conta:cliente.getContas()) {
                         System.out.println(conta.toString());
@@ -57,6 +61,54 @@ public class Main {
                     for(Conta conta:cliente.getContas()) {
                         System.out.println(conta.toString());
                     }
+                    break;
+                case 3:
+                    Integer tipoTransacao;
+                    int numContaDe;
+                    int numContaPara;
+                    Double valor;
+                    boolean continuarTransacao = false;
+
+                    do {
+                        System.out.println("Digite o tipo da transação [1] pix \n [2] TED");
+                        tipoTransacao = scan.nextInt();
+
+                        if(tipoTransacao == 1 || tipoTransacao == 2) {
+                            continuarTransacao = !continuarTransacao;
+                            break;
+                        }
+                        System.out.println("Opção inválida, digite novamente o tipo da transação");
+                    } while(!continuarTransacao);
+
+                    System.out.println("Digite o número da conta do remetente :");
+                    numContaDe = scan.nextInt();
+
+                    System.out.println("Digite o número da conta do destinatario :");
+                    numContaPara = scan.nextInt();
+
+                    System.out.println("Digite o valor da transação :");
+                    valor = scan.nextDouble();
+
+                    Conta contaDe = cliente.getContaByNum(numContaDe);
+                    Conta contaPara = cliente.getContaByNum(numContaPara);
+
+                    if(!(contaDe != null && contaPara != null)) {
+                        System.out.println("Uma das contas não é válida, verifique e tente novamente");
+                        break;
+                    }
+
+                    Transacao transacao = new Transacao(tipoTransacao, contaDe, contaPara, valor);
+
+                    if(!transacao.efetuarTransacao()) {
+                        System.out.println("A transação é inválida");
+                        break;
+                    }
+
+                    contaDe.registrarTransacao(transacao);
+                    contaPara.registrarTransacao(transacao);
+
+                    System.out.println(contaDe);
+                    System.out.println(contaPara);
                     break;
                 default:
                     System.out.println("Opção inválida");
