@@ -17,7 +17,13 @@ public class Main {
         do {
             int opcao;
 
-            System.out.println("Selecione uma opção: \n [1] Criar Conta \n [2] Excluir Conta \n [3] Efetuar Transação \n [0] Sair");
+            System.out.println("""
+                    Selecione uma opção:\s
+                     [1] Criar Conta\s
+                     [2] Excluir Conta\s
+                     [3] Efetuar Transação\s
+                     [4] Entrar em uma conta \s
+                     [0] Sair""");
             opcao = scan.nextInt();
 
             if(opcao == 0) {
@@ -41,10 +47,6 @@ public class Main {
                     cont++;
 
                     cliente.criarConta(opcaoCriar, cont);
-
-                    for(Conta conta:cliente.getContas()) {
-                        System.out.println(conta.toString());
-                    }
                     break;
                 case 2:
                     int opcaoExcluir;
@@ -58,9 +60,6 @@ public class Main {
                     }
 
                     cliente.encerrarConta(opcaoExcluir);
-                    for(Conta conta:cliente.getContas()) {
-                        System.out.println(conta.toString());
-                    }
                     break;
                 case 3:
                     Integer tipoTransacao;
@@ -99,16 +98,37 @@ public class Main {
 
                     Transacao transacao = new Transacao(tipoTransacao, contaDe, contaPara, valor);
 
-                    if(!transacao.efetuarTransacao()) {
-                        System.out.println("A transação é inválida");
-                        break;
-                    }
+                    transacao.efetuarTransacao(tipoTransacao);
 
                     contaDe.registrarTransacao(transacao);
                     contaPara.registrarTransacao(transacao);
+                    break;
+                case 4:
+                    int numConta;
 
-                    System.out.println(contaDe);
-                    System.out.println(contaPara);
+                    System.out.println("Digite o número da sua conta para acessa-la");
+                    numConta = scan.nextInt();
+
+                    Conta contaEncontrada = cliente.getContaByNum(numConta);
+
+                    Integer opcaoMenu;
+
+                    do {
+                        System.out.println("Menu Conta \n [1] Depositar \n 2 [Sacar] \n [0] Encerrar");
+                        opcaoMenu = scan.nextInt();
+                    } while(opcaoMenu > 2);
+
+                    if(opcaoMenu == 0) {
+                        System.out.println("Saindo...");
+                        break;
+                    }
+
+                    Double valorAcao;
+
+                    System.out.println("Digite o valor da acao");
+                    valorAcao = scan.nextDouble();
+
+                    contaEncontrada.acoes(opcaoMenu, valorAcao);
                     break;
                 default:
                     System.out.println("Opção inválida");

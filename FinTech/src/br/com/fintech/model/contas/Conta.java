@@ -85,6 +85,36 @@ public class Conta {
         System.out.println(this.saldo);
     }
 
+    public void acoes(Integer opcao, Double valor) {
+        if(opcao == 1) {
+            this.depositar(valor);
+            System.out.printf("Saldo: %f \n", this.saldo);
+        } else {
+            this.sacar(valor);
+            System.out.printf("Saldo: %f \n", this.saldo);
+        }
+    }
+
+    public void depositar(Double valor) {
+        if(valor > 0) {
+            this.saldo += valor;
+            System.out.printf("Deposito efetuado no valor de R$%f \n", valor);
+            return;
+        }
+
+        System.out.println("O valor do deposito tem que ser maior que 0");
+    }
+
+    public void sacar(Double valor) {
+        if(valor > 0) {
+            this.saldo -= valor;
+            System.out.printf("Saque efetuado no valor de R$%f \n", valor);
+            return;
+        }
+
+        System.out.println("O valor do saque tem que ser maior que 0");
+    }
+
     public String toString() {
         return "{ tipoConta: " + this.tipoConta + ", \n" + "numero: " + this.numero + ", \n" + "saldo: " + this.saldo +
                 ", \n" + "limite: " + this.limite + ", \n" + "extrato: {" + this.extrato + "}, \n" + "banco: " + this.banco +

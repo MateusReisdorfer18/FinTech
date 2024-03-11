@@ -47,17 +47,25 @@ public class Transacao {
         this.valor = valor;
     }
 
-    public boolean efetuarTransacao() {
-        if(this.contaDe.getSaldo() >= this.valor) {
-            this.contaPara.setSaldo(contaPara.getSaldo() + this.valor);
-            this.contaDe.setSaldo(this.contaDe.getSaldo() - this.valor);
-            return true;
+    public void efetuarTransacao(Integer tipoTransacao) {
+        if(tipoTransacao == 2) {
+            Double taxaTED = 20.0;
+            if(contaDe.getSaldo() < this.valor + taxaTED) {
+                System.out.println("Não e possivel concluir a transacao pois o saldo do remetente e insufisciente");
+                return;
+            }
+
+            this.contaPara.setSaldo(this.contaPara.getSaldo() + this.valor);
+            this.contaDe.setSaldo(this.contaDe.getSaldo() - (this.valor + taxaTED));
+
+            return;
         }
 
-        return false;
+        this.contaPara.setSaldo(this.contaPara.getSaldo() + this.valor);
+        this.contaDe.setSaldo(this.contaDe.getSaldo() - this.valor);
     }
 
     public String toString() {
-        return "Tipo da Transação: " + this.tipo + "\nConta Remetente: " + this.contaDe.getNumero() + "\nConta Destinatario: " + this.contaPara.getNumero() + "\nValor da Transação: " + this.valor;
+        return "{Tipo da Transação: " + this.tipo + "\nConta Remetente: " + this.contaDe.getNumero() + "\nConta Destinatario: " + this.contaPara.getNumero() + "\nValor da Transação: " + this.valor + "}\n";
     }
 }
