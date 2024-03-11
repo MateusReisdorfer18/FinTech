@@ -1,7 +1,7 @@
 package br.com.fintech;
 
+import br.com.fintech.model.Acoes;
 import br.com.fintech.model.Cliente;
-import br.com.fintech.model.Transacao;
 import br.com.fintech.model.contas.Conta;
 
 import java.util.Scanner;
@@ -21,8 +21,7 @@ public class Main {
                     Selecione uma opção:\s
                      [1] Criar Conta\s
                      [2] Excluir Conta\s
-                     [3] Efetuar Transação\s
-                     [4] Entrar em uma conta \s
+                     [3] Entrar em uma conta \s
                      [0] Sair""");
             opcao = scan.nextInt();
 
@@ -62,73 +61,81 @@ public class Main {
                     cliente.encerrarConta(opcaoExcluir);
                     break;
                 case 3:
-                    Integer tipoTransacao;
-                    int numContaDe;
-                    int numContaPara;
-                    Double valor;
-                    boolean continuarTransacao = false;
-
-                    do {
-                        System.out.println("Digite o tipo da transação [1] pix \n [2] TED");
-                        tipoTransacao = scan.nextInt();
-
-                        if(tipoTransacao == 1 || tipoTransacao == 2) {
-                            continuarTransacao = !continuarTransacao;
-                            break;
-                        }
-                        System.out.println("Opção inválida, digite novamente o tipo da transação");
-                    } while(!continuarTransacao);
-
-                    System.out.println("Digite o número da conta do remetente :");
-                    numContaDe = scan.nextInt();
-
-                    System.out.println("Digite o número da conta do destinatario :");
-                    numContaPara = scan.nextInt();
-
-                    System.out.println("Digite o valor da transação :");
-                    valor = scan.nextDouble();
-
-                    Conta contaDe = cliente.getContaByNum(numContaDe);
-                    Conta contaPara = cliente.getContaByNum(numContaPara);
-
-                    if(!(contaDe != null && contaPara != null)) {
-                        System.out.println("Uma das contas não é válida, verifique e tente novamente");
-                        break;
-                    }
-
-                    Transacao transacao = new Transacao(tipoTransacao, contaDe, contaPara, valor);
-
-                    transacao.efetuarTransacao(tipoTransacao);
-
-                    contaDe.registrarTransacao(transacao);
-                    contaPara.registrarTransacao(transacao);
-                    break;
-                case 4:
                     int numConta;
+                    Integer opcaoMenu;
+                    Double valorAcao;
 
                     System.out.println("Digite o número da sua conta para acessa-la");
                     numConta = scan.nextInt();
-
                     Conta contaEncontrada = cliente.getContaByNum(numConta);
 
-                    Integer opcaoMenu;
+                    if(contaEncontrada == null) {
+                        System.out.printf("Conta não encontrada com o número %d", numConta);
+                        break;
+                    }
 
                     do {
-                        System.out.println("Menu Conta \n [1] Depositar \n 2 [Sacar] \n [0] Encerrar");
+                        System.out.println("Menu Conta \n [1] Depositar \n [2] Sacar \n [3] Efetuar Pagamento \n [0] Encerrar");
                         opcaoMenu = scan.nextInt();
-                    } while(opcaoMenu > 2);
+                    } while(opcaoMenu > 3);
 
                     if(opcaoMenu == 0) {
                         System.out.println("Saindo...");
                         break;
                     }
 
-                    Double valorAcao;
+                    switch(opcaoMenu) {
+                        case 1:
+                            System.out.println("Digite o valor da acao");
+                            valorAcao = scan.nextDouble();
 
-                    System.out.println("Digite o valor da acao");
-                    valorAcao = scan.nextDouble();
+                            contaEncontrada.depositar(valorAcao);
+                            break;
+                        case 2:
+                            System.out.println("Digite o valor da acao");
+                            valorAcao = scan.nextDouble();
 
-                    contaEncontrada.acoes(opcaoMenu, valorAcao);
+                            contaEncontrada.sacar(valorAcao);
+                            break;
+                        case 3:
+                            Integer tipoAcao;
+                            int numDestinatario;
+                            Double valor;
+
+                            System.out.println("Digite o tipo do pagamento \n [1] Pix \n [2] TED \n [3] Crédito \n [4] Débito \n [0] Encerrar");
+                            tipoAcao = scan.nextInt();
+
+                            if(tipoAcao == 0) {
+                                System.out.println("Saindo...");
+                                break;
+                            }
+
+                            System.out.println("Digite o número da conta do destinatario");
+                            numDestinatario = scan.nextInt();
+
+                            Conta destinatario = cliente.getContaByNum(numDestinatario);
+
+                            if(destinatario == null) {
+                                System.out.println("A conta do destinatario nao foi encontrada");
+                                break;
+                            }
+
+                            System.out.println("Digite o valor da ação");
+                            valor = scan.nextDouble();
+
+                            Acoes acao = new Acoes(tipoAcao, contaEncontrada, destinatario, valor);
+
+                            acao.efetuarAcao();
+                            contaEncontrada.registrarAcao(acao);
+
+                            System.out.println();
+                            System.out.println(acao.toString());
+                            System.out.println(contaEncontrada.getSaldo());
+                            System.out.println(destinatario.getSaldo());
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 default:
                     System.out.println("Opção inválida");

@@ -1,10 +1,6 @@
 package br.com.fintech.model.contas;
 
-import br.com.fintech.model.Cliente;
-import br.com.fintech.model.Transacao;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class ContaCorrente extends Conta {
 

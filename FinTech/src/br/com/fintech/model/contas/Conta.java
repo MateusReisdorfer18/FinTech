@@ -1,7 +1,7 @@
 package br.com.fintech.model.contas;
 
-import br.com.fintech.model.Cliente;
-import br.com.fintech.model.Transacao;
+import br.com.fintech.model.Acoes;
+
 import java.util.List;
 
 public class Conta {
@@ -9,7 +9,7 @@ public class Conta {
     private Integer numero;
     private Double saldo;
     private Double limite;
-    private List<Transacao> extrato;
+    private List<Acoes> extrato;
     private String banco;
     private String cliente;
 
@@ -49,11 +49,11 @@ public class Conta {
         this.limite = limite;
     }
 
-    public List<Transacao> getExtrato() {
+    public List<Acoes> getExtrato() {
         return this.extrato;
     }
 
-    public void setExtrato(List<Transacao> extrato) {
+    public void setExtrato(List<Acoes> extrato) {
         this.extrato = extrato;
     }
 
@@ -76,23 +76,12 @@ public class Conta {
     public Integer gerarNumero(int cont) {
         return cont;
     }
-
-    public void registrarTransacao(Transacao transacao) {
-        this.extrato.add(transacao);
-    }
-
     public void verSaldo() {
         System.out.println(this.saldo);
     }
 
-    public void acoes(Integer opcao, Double valor) {
-        if(opcao == 1) {
-            this.depositar(valor);
-            System.out.printf("Saldo: %f \n", this.saldo);
-        } else {
-            this.sacar(valor);
-            System.out.printf("Saldo: %f \n", this.saldo);
-        }
+    public void registrarAcao(Acoes acao) {
+        this.extrato.add(acao);
     }
 
     public void depositar(Double valor) {
